@@ -22,6 +22,18 @@ class FileSystemTodoStorage extends TodoStorage{
     }
   }
 
+  @override
+  Future<void> insertTodo(Todo todo) async {
+    final latestTodoList = await readTodoList();
+    latestTodoList.add(todo);
+    try{
+      final file = await _localFile;
+      final jsonArray = latestTodoList.map((todo)=> todo.toJson()).toList();
+      await file.writeAsString(jsonEncode(jsonArray));
+    }catch(e){
+      return;
+    }
+  }
   Future<File> get _localFile async{
     final directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
@@ -29,14 +41,33 @@ class FileSystemTodoStorage extends TodoStorage{
   }
 
   @override
-  Future<void> insertTodo(Todo todo) {
-    // TODO: implement insertTodo
-    throw UnimplementedError();
+  Future<void> saveTodoList(List<Todo> todoList) async{
+    try{
+      final file = await _localFile;
+      final jsonArray = todoList.map((todo)=> todo.toJson()).toList();
+      await file.writeAsString(jsonEncode(jsonArray));
+    } catch(e){
+      return;
+    }
+  }
+}
+
+class CashedTodoStorage extends TodoStorage{
+  final List<Todo> _todolist = [];
+  @override
+  Future<void> insertTodo(Todo todo) async{
+    _todolist.add(todo);
   }
 
   @override
-  Future<void> saveTodoList(List<Todo> todoList) {
-    // TODO: implement saveTodoList
-    throw UnimplementedError();
+  Future<List<Todo>> readTodoList() async {
+    return _todolist;
   }
+
+  @override
+  Future<void> saveTodoList(List<Todo> todoList) async{
+    _todolist.clear();
+    _todolist.addAll(todoList);
+  }
+
 }
