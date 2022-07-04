@@ -25,7 +25,10 @@ class TodoListVersion{
     int? createdAt,
     List<Todo> ? todos,
   }){
-    return TodoListVersion(createdAt: createdAt ?? this.createdAt, todos: todos?? this.todos);
+    return TodoListVersion(
+        createdAt: createdAt ?? this.createdAt,
+        todos: todos?? this.todos
+    );
   }
 }
 
