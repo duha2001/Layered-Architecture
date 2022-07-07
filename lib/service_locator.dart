@@ -17,4 +17,48 @@ void setupMainDeps(){
     FileSystemTodoStorage(),
     instanceName: kFileSystem,
   );
+  getIt.registerSingleton<UserModeStorage>(CacheUserModeStorage());
+  getIt.registerFactory<TodoBloc>(
+        () => TodoBloc(todoStorage: getIt.get(instanceName: kFileSystem)),
+  );
+
+  // getIt.registerFactory(() => )
+}
+
+void setupSandBoxDeps(){
+  getIt.registerSingleton<TodoStorage>(
+    CashedTodoStorage(),
+    instanceName: kCached
+  );
+
+  getIt.registerFactory(() =>
+      SandboxTodoBloc(
+          sandboxTodoStorage: getIt.get(instanceName: kCached),
+          normalTodoStorage: getIt.get(instanceName: kFileSystem),
+      )
+  );
+}
+
+void setupSuperSandboxDeps(){
+  getIt.registerSingleton<TodoStorage>(
+    CashedTodoStorage(),
+    instanceName: kCached,
+  );
+
+  getIt.registerSingleton<TodoListVersionStorage>(
+    FileSystemTodoListVersionStorage(),
+    instanceName: kFileSystem,
+  );
+
+  getIt.registerFactory(() =>
+    SuperSanboxTodoBloc(
+        superSandboxTodoStorage: getIt.get(instanceName: kCached),
+        normalTodoStorage: getIt.get(instanceName: kCached),
+        todoListVersionStorage: getIt.get(instanceName: kFileSystem),
+    )
+  );
+  getIt.registerFactory(() =>
+    TodoListVersionBloc(todoStorage: getIt.get(instanceName: kCached),
+    )
+  );
 }
