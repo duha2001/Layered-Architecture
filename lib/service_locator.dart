@@ -5,6 +5,7 @@ import 'package:layered_architecture/business/todo_list_version_bloc.dart';
 import 'package:layered_architecture/data/todo_storage.dart';
 import 'package:layered_architecture/data/todo_list_version_storage.dart';
 import 'package:layered_architecture/data/user_mode_storage.dart';
+import 'package:layered_architecture/business/user_mode_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -21,7 +22,9 @@ void setupMainDeps(){
   getIt.registerFactory<TodoBloc>(
         () => TodoBloc(todoStorage: getIt.get(instanceName: kFileSystem)),
   );
-
+  getIt.registerFactory<UserModeBloc>(
+        () => UserModeBloc(userModeStorage: getIt.get()),
+  );
   // getIt.registerFactory(() => )
 }
 
