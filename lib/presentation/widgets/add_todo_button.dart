@@ -26,7 +26,7 @@ class AddTodoButton extends StatelessWidget{
       ),
     );
   }
-  
+
   Future<void> _onAddTodoButtonPressed() async{
     await _addTodo();
     _onAddedSuccess?.call();
